@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orchard Gacha - Aiden's Fruit Adventure</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="game-header">
+      <div class="logo-area">
+        <div class="logo-icon">🍎</div>
+        <div>
+          <h1>Orchard Gacha</h1>
+          <p class="subtitle">Aiden's Fruit Adventure</p>
+        </div>
+      </div>
+
+      <div class="hud-stats">
+        <div class="hud-item coins" id="hud-coins" title="Apple Coins">
+          <span class="icon">🍎</span>
+          <span class="val" id="coin-count">500</span>
+        </div>
+        <div class="hud-item gems" id="hud-gems" title="Fruit Gems">
+          <span class="icon">💎</span>
+          <span class="val" id="gem-count">50</span>
+        </div>
+        <div class="hud-item collection" title="Characters Collected">
+          <span class="icon">📖</span>
+          <span class="val" id="collection-count">0/20</span>
+        </div>
+        <button id="sound-btn" class="hud-btn" title="Toggle Sound">🔊</button>
+      </div>
+    </header>
+
+    <!-- Main Content Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="gacha-view">🎁 Mystery Box</button>
+      <button class="nav-tab" data-tab="orchard-view">🌳 The Orchard</button>
+      <button class="nav-tab" data-tab="roster-view">👥 Hero Roster (<span id="tab-roster-count">0/20</span>)</button>
+      <button class="nav-tab" data-tab="expedition-view">⚔️ Expeditions</button>
+    </nav>
+
+    <!-- GACHA VIEW -->
+    <section id="gacha-view" class="tab-content active">
+      <div class="gacha-stage">
+        <div class="rates-banner">
+          <span class="rate-badge common">Common: 70%</span>
+          <span class="rate-badge rare">Rare: 29%</span>
+          <span class="rate-badge legendary">⭐ Legendary: 1%</span>
+        </div>
+
+        <div class="chest-container" id="chest-container">
+          <div class="chest-glow" id="chest-glow"></div>
+          <div class="chest-box" id="chest-box">
+            <div class="chest-lid">
+              <div class="lid-trim"></div>
+              <div class="lid-gem">🌟</div>
+            </div>
+            <div class="chest-body">
+              <div class="chest-lock">🔒</div>
+              <div class="chest-vines">🌿</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="gacha-prompt" id="gacha-prompt">Choose your harvest!</p>
+
+        <div class="gacha-actions">
+          <button class="btn btn-harvest" id="pull-single-btn">
+            <span class="btn-top">
+              <span class="btn-icon">🎁</span> Harvest 1 Box
+            </span>
+            <span class="btn-cost">100 🍎</span>
+          </button>
+
+          <button class="btn btn-multi" id="pull-ten-btn">
+            <span class="btn-top">
+              <span class="btn-icon">✨</span> Super Harvest x10
+            </span>
+            <span class="btn-cost">900 🍎 <small class="discount">(10% OFF)</small></span>
+          </button>
+        </div>
+
+        <!-- Pull History / Last Pull -->
+        <div class="recent-pulls-preview" id="recent-pulls-preview">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ORCHARD TREE VIEW (Interactive apple clicker) -->
+    <section id="orchard-view" class="tab-content">
+      <div class="orchard-container">
+        <div class="orchard-info">
+          <h2>Grand Harvest Apple Tree</h2>
+          <p>Tap hanging golden apples to harvest extra Apple Coins! Shake the whole tree for a massive harvest.</p>
+        </div>
+
+        <div class="tree-wrapper">
+          <div class="interactive-tree" id="interactive-tree">
+            <div class="tree-foliage">
+              <!-- Hanging Apples -->
+              <div class="hanging-apple apple-1" data-id="1">🍎</div>
+              <div class="hanging-apple apple-2" data-id="2">🍎</div>
+              <div class="hanging-apple apple-3" data-id="3">🍎</div>
+              <div class="hanging-apple apple-4" data-id="4">🍎</div>
+              <div class="hanging-apple apple-5" data-id="5">🍎</div>
+              <div class="hanging-apple apple-6" data-id="6">🍎</div>
+            </div>
+            <div class="tree-trunk"></div>
+          </div>
+        </div>
+
+        <div class="tree-controls">
+          <button class="btn btn-tree-shake" id="shake-tree-btn">
+            💨 Shake Entire Tree (+150 🍎)
+          </button>
+          <button class="btn btn-daily-harvest" id="daily-harvest-btn">
+            🧺 Daily Orchard Basket (+300 🍎)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERO ROSTER VIEW -->
+    <section id="roster-view" class="tab-content">
+      <div class="roster-controls">
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="all">All (20)</button>
+          <button class="filter-btn" data-filter="common">Common (14)</button>
+          <button class="filter-btn" data-filter="rare">Rare (5)</button>
+          <button class="filter-btn" data-filter="legendary">Legendary (1)</button>
+          <button class="filter-btn" data-filter="owned">Owned Only</button>
+        </div>
+      </div>
+
+      <div class="roster-grid" id="roster-grid">
+        <!-- 20 Hero Cards rendered by JS -->
+      </div>
+    </section>
+
+    <!-- EXPEDITIONS VIEW -->
+    <section id="expedition-view" class="tab-content">
+      <div class="expeditions-container">
+        <h2>Orchard Expeditions</h2>
+        <p class="exp-sub">Send your discovered fruit heroes on expeditions to gather bountiful treasures!</p>
+
+        <div class="expeditions-list" id="expeditions-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- PULL REVEAL MODAL -->
+  <div class="modal-overlay" id="reveal-modal">
+    <div class="reveal-card-stage" id="reveal-card-stage">
+      <div class="burst-rays"></div>
+      <div class="reveal-card-wrapper" id="reveal-card-wrapper">
+        <!-- Rendered card -->
+      </div>
+      <button class="btn btn-continue" id="reveal-continue-btn">Awesome!</button>
+    </div>
+  </div>
+
+  <!-- MULTI-PULL SUMMARY MODAL -->
+  <div class="modal-overlay" id="multi-modal">
+    <div class="multi-modal-content">
+      <h2>🎉 10x Harvest Results! 🎉</h2>
+      <div class="multi-results-grid" id="multi-results-grid"></div>
+      <button class="btn btn-continue" id="multi-continue-btn">Collect All</button>
+    </div>
+  </div>
+
+  <!-- HERO DETAIL MODAL -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="detail-modal-content" id="detail-modal-content">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <canvas id="confetti-canvas"></canvas>
+  <script src="app.js"></script>
+</body>
+</html>
